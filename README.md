@@ -27,6 +27,9 @@ Every tool is annotated read-only and returns structured content that has an out
 
 ## Install
 
+Download a prebuilt binary for Linux, macOS or Windows from the
+[latest release](https://github.com/DenizCiger/untis-mcp/releases/latest), or build it with Cargo:
+
 ```sh
 cargo install --git https://github.com/DenizCiger/untis-mcp
 ```
