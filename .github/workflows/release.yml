@@ -72,12 +72,16 @@ jobs:
           cp "target/${{ matrix.target }}/release/$BIN" README.md LICENSE dist/
           if [ "${{ matrix.archive }}" = "tar.gz" ]; then
             tar -C dist -czf "$ARCHIVE" "$BIN" README.md LICENSE
-            shasum -a 256 "$ARCHIVE" > "$ARCHIVE.sha256"
           else
             cd dist
             powershell.exe -NoProfile -Command "Compress-Archive -Path '$BIN','README.md','LICENSE' -DestinationPath '../$ARCHIVE' -Force"
             cd ..
-            powershell.exe -NoProfile -Command "(Get-FileHash '$ARCHIVE' -Algorithm SHA256).Hash.ToLower() + '  $ARCHIVE'" > "$ARCHIVE.sha256"
+          fi
+          # sha256sum on Linux and Git Bash, shasum on macOS; both write LF line endings.
+          if command -v sha256sum >/dev/null; then
+            sha256sum "$ARCHIVE" > "$ARCHIVE.sha256"
+          else
+            shasum -a 256 "$ARCHIVE" > "$ARCHIVE.sha256"
           fi
           echo "archive=$ARCHIVE" >> "$GITHUB_OUTPUT"
 
